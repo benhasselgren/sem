@@ -17,7 +17,7 @@ public class App
         ArrayList<Employee> employees = a.getAllSalaries();
 
         // Print the salaries to the console
-        //a.printSalaries(employees);
+        a.printSalaries(employees);
 
         // Disconnect from database
         a.disconnect();
