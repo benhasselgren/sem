@@ -1,16 +1,66 @@
 @startuml
+' seton demo
+!define PAGE_SETTING newpage
+
+header
+<font color=red>Use Case</font>
+endheader
+
 actor HR as "HR Advisor"
+actor DM as "Department Manager"
 
 rectangle Database
-
 rectangle "HR System" {
-    usecase UC4 as "Get salaries
-    by role"
 
+    ' Use case 1
+    usecase UC1 as "Get all salaries"
     usecase UCa as "Print salaries"
+    HR - UC1
+    UC1 ..> UCa : include
+    UC1 - Database
 
+    ' Use case 2
+    usecase UC3 as "Get salaries by department"
+    HR - UC3
+    UC3 - Database
+
+    ' Use case 3
+    DM - UC3
+    UC3 ..> UCa : include
+    UC3 - Database
+
+    ' Use case 4
+    usecase UC4 as "Get salaries by role"
     HR - UC4
     UC4 ..> UCa : include
     UC4 - Database
+
+    ' Use case 5
+    usecase UC5 as "Add employee"
+    HR - UC5
+    UC5 - Database
+
+    ' Use case 6
+    usecase UC6 as "View employee"
+    usecase UCb as "Get employee"
+    HR - UC6
+    UC6 ..> UCb : include
+    UC6 - Database
+
+    ' Use case 7
+    usecase UC7 as "Update employee"
+    HR - UC7
+    UC7 ..> UCb : include
+    UC7 - Database
+
+    ' Use case 8
+    usecase UC8 as "Delete employee"
+    HR - UC8
+    UC8 ..> UCb : include
+    UC8 - Database
+
+
+
 }
+
 @enduml
