@@ -248,4 +248,75 @@ public class App
             System.out.println(emp_string);
         }
     }
+
+    public ArrayList<Employee> getSalariesByDepartment(department dept)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT employees.emp_no, employees.first_name, employees.last_name, salaries.salary "
+                            + "FROM employees, salaries, dept_emp, departments "
+                            + "WHERE employees.emp_no = salaries.emp_no "
+                            + "AND employees.emp_no = dept_emp.emp_no "
+                            + "AND dept_emp.dept_no = departments.dept_no "
+                            + "AND salaries.to_date = '9999-01-01' "
+                            + "AND departments.dept_no = " + dept.dept_no + " "
+                            + "ORDER BY employees.emp_no ASC ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract employee information
+            ArrayList<Employee> employees = new ArrayList<Employee>();
+            while (rset.next())
+            {
+                Employee emp = new Employee();
+                emp.emp_no = rset.getInt("employees.emp_no");
+                emp.first_name = rset.getString("employees.first_name");
+                emp.last_name = rset.getString("employees.last_name");
+                emp.salary = rset.getInt("salaries.salary");
+                employees.add(emp);
+            }
+            return employees;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get employee details");
+            return null;
+        }
+
+    }
+
+    public department getDepartment(String dept_name) {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT departments.dept_no, departments.dept_name, dept_manager.emp_no  "
+                            + "FROM departments, dept_manager   "
+                            + "WHERE departments.dept_no = dept_manager.dept_no  "
+                            + "AND dept_manager.to_date = '9999-01-01' "
+                            + "AND departments.dept_name = " + dept_name + " ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+
+            // Extract employee information
+            department dept = new department();
+            dept.dept_no = rset.getInt("departments.dept_no");
+            dept.dept_name= rset.getString("departments.dept_name");
+            dept.manager = rset.getString("dept_manager.emp_no");
+
+            return dept;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get department details");
+            return null;
+        }
+    }
 }
