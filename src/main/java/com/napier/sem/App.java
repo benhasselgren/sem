@@ -90,7 +90,8 @@ public class App
             }
         }
     }
-    public Employee getEmployee(int ID)
+
+    public Employee getManager(int ID, department dept)
     {
         try
         {
@@ -98,7 +99,7 @@ public class App
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect =
-                    "SELECT employees.emp_no, employees.first_name, employees.last_name, titles.title, salaries.salary, departments.dept_name, (SELECT CONCAT(emp_no, \" \", first_name, \" \", last_name) FROM employees WHERE emp_no = dept_manager.emp_no) AS manager FROM employees "
+                    "SELECT employees.emp_no, employees.first_name, employees.last_name, titles.title, salaries.salary, departments.dept_name "
                             + "JOIN salaries on  employees.emp_no=salaries.emp_no "
                             + "JOIN titles on  employees.emp_no=titles.emp_no "
                             + "JOIN dept_emp on  employees.emp_no=dept_emp.emp_no "
@@ -119,8 +120,54 @@ public class App
                 emp.last_name = rset.getString("last_name");
                 emp.salary =  rset.getInt("salary");
                 emp.title = rset.getString("title");
-                emp.dept_name = rset.getString("dept_name");
-                emp.manager= rset.getString("manager");
+                emp.dept_name = dept;
+                emp.manager= null;
+                return emp;
+            }
+            else
+                return null;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get manager details");
+            return null;
+        }
+    }
+
+    public Employee getEmployee(int ID)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT employees.emp_no, employees.first_name, employees.last_name, titles.title, salaries.salary, departments.dept_name, (SELECT emp_no FROM employees WHERE emp_no = dept_manager.emp_no) AS manager FROM employees "
+                            + "JOIN salaries on  employees.emp_no=salaries.emp_no "
+                            + "JOIN titles on  employees.emp_no=titles.emp_no "
+                            + "JOIN dept_emp on  employees.emp_no=dept_emp.emp_no "
+                            + "JOIN departments on  dept_emp.dept_no=departments.dept_no "
+                            + "JOIN dept_manager on  departments.dept_no=dept_manager.dept_no "
+                            + "WHERE employees.emp_no = " + ID + " "
+                            + "AND dept_emp.to_date = '9999-01-01' AND dept_manager.to_date = '9999-01-01' "
+                            + "LIMIT 1; ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Return new employee if valid.
+            // Check one is returned
+            if (rset.next())
+            {
+                Employee emp = new Employee();
+                emp.emp_no = rset.getInt("emp_no");
+                emp.first_name = rset.getString("first_name");
+                emp.last_name = rset.getString("last_name");
+                emp.salary =  rset.getInt("salary");
+                emp.title = rset.getString("title");
+                department dept =  getDepartment(rset.getString("dept_name"));
+                emp.dept_name = dept;
+                Employee manager =  getManager(rset.getInt("manager"), dept);
+                emp.manager = manager;
                 return emp;
             }
             else
@@ -308,7 +355,9 @@ public class App
             department dept = new department();
             dept.dept_no = rset.getInt("departments.dept_no");
             dept.dept_name= rset.getString("departments.dept_name");
-            dept.manager = rset.getString("dept_manager.emp_no");
+
+            Employee emp = getEmployee(rset.getInt("dept_manager.emp_no"));
+            dept.manager = emp;
 
             return dept;
         }
