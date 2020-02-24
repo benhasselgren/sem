@@ -13,21 +13,17 @@ public class App
         // Connect to database
         a.connect();
 
-        // Extract employee salary information
-
-        //All employees
+        //Get all salaries
         //ArrayList<Employee> employees = a.getAllSalaries();
+
+        //Get salaries by job title
         //ArrayList<Employee> employees = a.getSalariesWithRole();
-        //department dept = a.getDepartment( "Sales");
-        Employee employee = a.getEmployee(499894, false, null);
-        //Employee manager = a.getManager(68787, dept);
 
-        a.displayEmployee(employee);
+        //Get salaries by department
+        ArrayList<Employee> employees = a.getSalariesByDepartment(a.getDepartment( "Sales"));
 
-        //ArrayList<Employee> employees = a.getSalariesByDepartment(dept);
-
-        // Print the salaries to the console
-        //a.printSalaries(e);
+        //Print the salaries
+        a.printSalaries(employees);
 
         // Disconnect from database
         a.disconnect();
@@ -98,6 +94,13 @@ public class App
         }
     }
 
+    /**
+     * Gets all the employees and salaries which have <title>.
+     * @param ID The employee id
+     * @param isManager Checks to see if it's an employee or manager.
+     * @param deptCopy A copy of the department
+     * @return An employee.
+     */
     public Employee getEmployee(int ID, boolean isManager, department deptCopy)
     {
         try
@@ -163,6 +166,10 @@ public class App
         }
     }
 
+    /**
+     * Prints a list of employees.
+     * @param emp The employee to print
+     */
     public void displayEmployee(Employee emp)
     {
         if (emp != null)
@@ -219,9 +226,10 @@ public class App
 
     /**
      * Gets all the employees and salaries which have <title>.
+     * @param title the job role
      * @return A list of all employees and salaries, or null if there is an error.
      */
-    public ArrayList<Employee> getSalariesWithRole()
+    public ArrayList<Employee> getSalariesWithRole(String title)
     {
         try
         {
@@ -235,7 +243,7 @@ public class App
                             + "AND employees.emp_no = titles.emp_no "
                             + "AND salaries.to_date = '9999-01-01' "
                             + "AND titles.to_date = '9999-01-01' "
-                            + "AND titles.title = 'Engineer' "
+                            + "AND titles.title = '" + title + "' "
                             + "ORDER BY employees.emp_no ASC ";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
@@ -278,6 +286,11 @@ public class App
         }
     }
 
+    /**
+     * Prints a list of employees.
+     * @param dept The department the employees are in.
+     * @return  List of employees
+     */
     public ArrayList<Employee> getSalariesByDepartment(department dept)
     {
         try
@@ -292,7 +305,7 @@ public class App
                             + "AND employees.emp_no = dept_emp.emp_no "
                             + "AND dept_emp.dept_no = departments.dept_no "
                             + "AND salaries.to_date = '9999-01-01' "
-                            + "AND departments.dept_no = " + dept.dept_no + " "
+                            + "AND departments.dept_no = '" + dept.dept_no + "' "
                             + "ORDER BY employees.emp_no ASC ";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
@@ -315,9 +328,13 @@ public class App
             System.out.println("Failed to get employee details");
             return null;
         }
-
     }
 
+    /**
+     * Returns a department.
+     * @param dept_name The name of the department to return.
+     * @return A department
+     */
     public department getDepartment(String dept_name) {
         try
         {
@@ -339,7 +356,7 @@ public class App
                 dept.dept_no = rset.getString("departments.dept_no");
                 dept.dept_name = rset.getString("departments.dept_name");
                 //Manager will be set in the getEmployee() method
-                dept.manager = null;
+                dept.manager = getEmployee(rset.getInt("dept_manager.emp_no"), true, dept);
 
                 //return the department
                 return dept;
