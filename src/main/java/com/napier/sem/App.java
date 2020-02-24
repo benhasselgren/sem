@@ -172,17 +172,16 @@ public class App
      */
     public void displayEmployee(Employee emp)
     {
+        // Check employees is not null
         if (emp != null)
         {
-            System.out.println(
-                    emp.emp_no + " "
-                            + emp.first_name + " "
-                            + emp.last_name + "\n"
-                            + emp.title + "\n"
-                            + "Salary: " + emp.salary + "\n"
-                            + emp.dept_name.dept_name + "\n"
-                            + "Manager: " + emp.manager.first_name + " " + emp.manager.last_name + "\n");
+            String emp_string = String.format("Emp no: %-8s First name: %-8s Last name: %-8s Title: %-8s Salary: %-8s Department: %-8s Manager: %s %s",
+                    emp.emp_no, emp.first_name, emp.last_name, emp.title, emp.salary, emp.dept_name.dept_name, emp.manager.first_name, emp.manager.last_name);
+            System.out.println(emp_string);
         }
+        System.out.println("No employee");
+        return;
+
     }
 
     /**
@@ -274,11 +273,19 @@ public class App
      */
     public void printSalaries(ArrayList<Employee> employees)
     {
+        // Check employees is not null
+        if (employees == null)
+        {
+            System.out.println("No employees");
+            return;
+        }
         // Print header
         System.out.println(String.format("%-10s %-15s %-20s %-8s", "Emp No", "First Name", "Last Name", "Salary"));
         // Loop over all employees in the list
         for (Employee emp : employees)
         {
+            if (emp == null)
+                continue;
             String emp_string =
                     String.format("%-10s %-15s %-20s %-8s",
                             emp.emp_no, emp.first_name, emp.last_name, emp.salary);
