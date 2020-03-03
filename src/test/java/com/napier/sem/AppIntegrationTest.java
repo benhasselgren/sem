@@ -66,4 +66,23 @@ public class AppIntegrationTest
 
         assertEquals(42000, employees.size());
     }
+
+    /*
+    //------------------testAddEmployee()------------------
+    @Test
+    void testAddEmployee()
+    {
+        //Employee emp = new Employee();
+        //emp.emp_no = 500000;
+        //emp.first_name = "Kevin";
+        //emp.last_name = "Chalmers";
+        //app.addEmployee(emp);
+
+        Employee emp = app.getEmployee(500000, true, null);
+        assertEquals(emp.emp_no, 500000);
+        assertEquals(emp.first_name, "Kevin");
+        assertEquals(emp.last_name, "Chalmers");
+    }
+
+     */
 }
