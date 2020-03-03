@@ -11,18 +11,19 @@ public class App
         App a = new App();
 
         // Connect to database
-        a.connect("localhost:33060");
+        if (args.length < 1)
+        {
+            a.connect("localhost:3306");
+        }
+        else
+        {
+            a.connect(args[0]);
+        }
 
-        //Get all salaries
-        //ArrayList<Employee> employees = a.getAllSalaries();
+        Department dept = a.getDepartment("Sales");
+        ArrayList<Employee> employees = a.getSalariesByDepartment(dept);
 
-        //Get salaries by job title
-        //ArrayList<Employee> employees = a.getSalariesWithRole();
-
-        //Get salaries by department
-        ArrayList<Employee> employees = a.getSalariesByDepartment(a.getDepartment( "Sales"));
-
-        //Print the salaries
+        // Print salary report
         a.printSalaries(employees);
 
         // Disconnect from database
@@ -101,7 +102,7 @@ public class App
      * @param deptCopy A copy of the department
      * @return An employee.
      */
-    public Employee getEmployee(int ID, boolean isManager, department deptCopy)
+    public Employee getEmployee(int ID, boolean isManager, Department deptCopy)
     {
         try
         {
@@ -144,7 +145,7 @@ public class App
                 }
 
                 //Get the department and get the manager
-                department dept =  getDepartment(rset.getString("departments.dept_name"));
+                Department dept =  getDepartment(rset.getString("departments.dept_name"));
 
                 Employee manager =  getEmployee(rset.getInt("manager"), true, dept);
 
@@ -298,7 +299,7 @@ public class App
      * @param dept The department the employees are in.
      * @return  List of employees
      */
-    public ArrayList<Employee> getSalariesByDepartment(department dept)
+    public ArrayList<Employee> getSalariesByDepartment(Department dept)
     {
         try
         {
@@ -342,7 +343,7 @@ public class App
      * @param dept_name The name of the department to return.
      * @return A department
      */
-    public department getDepartment(String dept_name) {
+    public Department getDepartment(String dept_name) {
         try
         {
             // Create an SQL statement
@@ -359,7 +360,7 @@ public class App
 
             if (rset.next()) {
                 // Extract department information
-                department dept = new department();
+                Department dept = new Department();
                 dept.dept_no = rset.getString("departments.dept_no");
                 dept.dept_name = rset.getString("departments.dept_name");
                 //Manager will be set in the getEmployee() method

@@ -2,13 +2,9 @@ package com.napier.sem;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class AppTest
 {
@@ -72,7 +68,7 @@ public class AppTest
     @Test
     void displayEmployee()
     {
-        department dept = new department();
+        Department dept = new Department();
         dept.dept_name = "Sales";
         dept.dept_no = "d007";
 
