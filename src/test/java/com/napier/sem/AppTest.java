@@ -57,7 +57,7 @@ public class AppTest
         app.printSalaries(employees);
     }
 
-    //------------------------------------------------- DisplaEmployees() -------------------------------------------------
+    //------------------------------------------------- DisplayEmployees() -------------------------------------------------
 
     @Test
     void displayEmployeeTestNull()
