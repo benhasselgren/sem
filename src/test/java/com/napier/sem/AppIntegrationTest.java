@@ -39,4 +39,31 @@ public class AppIntegrationTest
         assertEquals("Hauke", dept.manager.first_name);
         assertEquals("d007", dept.dept_no);
     }
+
+    //------------------getAllSalaries()------------------
+    @Test
+    void testGetAllSalaries()
+    {
+        ArrayList<Employee> employees = app.getAllSalaries();
+
+        assertEquals(240124, employees.size());
+    }
+
+    //------------------testGetAllSalariesWithRole()------------------
+    @Test
+    void testGetAllSalariesWithRole()
+    {
+        ArrayList<Employee> employees = app.getSalariesWithRole("Engineer");
+
+        assertEquals(30983, employees.size());
+    }
+
+    //------------------testGetAllSalariesByDepartment()------------------
+    @Test
+    void testGetAllSalariesByDepartment()
+    {
+        ArrayList<Employee> employees = app.getSalariesByDepartment(app.getDepartment("Sales"));
+
+        assertEquals(42000, employees.size());
+    }
 }
