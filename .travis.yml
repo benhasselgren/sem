@@ -34,10 +34,10 @@ jobs:
         - docker-compose up --abort-on-container-exit
 
 stages:
-      - unit tests
-      - integration tests
-      - name: deploy
-          if: branch = master
+  - unit tests
+  - integration tests
+  - name: deploy
+    if: branch = master
 
 after_success:
-      - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
